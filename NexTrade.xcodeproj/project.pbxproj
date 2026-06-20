@@ -1,0 +1,471 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		01FF9D9E95E36470BAA1DB57 /* CreateRequestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C89C48F96441296E51B8097 /* CreateRequestView.swift */; };
+		0D18023DCF7534D6CF5DB8F3 /* AppRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6C1492F9F0ED2FB63FA151 /* AppRootView.swift */; };
+		1C4FDDC4778417EF11B5FBA0 /* TextAreaField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0AB4FE5C95394F4796791F6 /* TextAreaField.swift */; };
+		2C1BAE9AF6374EC6F031F148 /* PrimaryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D41CD334FB5846D5DC0D85F /* PrimaryButton.swift */; };
+		2E9C907A25D39F5B58EA2D02 /* MockSourcingRequestService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D541AA1B89F6145839E6E99 /* MockSourcingRequestService.swift */; };
+		38A3B8917A0DCDBC4D225EA9 /* HomeDashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7DE4BB4366A6E13D66E446 /* HomeDashboardViewModel.swift */; };
+		3AA09696C4A3EE8F417FCB35 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0563EA8B60ACFBBEBAA8EDF2 /* Assets.xcassets */; };
+		432AD0632B6ECD569137D5D3 /* RequestsListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 213D05E5C53BF6E18B8444E8 /* RequestsListViewModel.swift */; };
+		44A73040ADB3B9DFCF07A472 /* AppTopBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5015EDC7C2FFECB0FB2A6067 /* AppTopBar.swift */; };
+		4DFA649282C5A75D661201DA /* ThemeToggleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA3F9C65DB9089F9F600C10B /* ThemeToggleButton.swift */; };
+		64985CC8BF9F3D98ABA4C5EA /* CategoryPill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D3FEB1BB36C3680F9DEF790 /* CategoryPill.swift */; };
+		6B08FE1E9625142E675AB793 /* AppLocalization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A04933CC400073A64335A9C /* AppLocalization.swift */; };
+		6EB2C44EFE6F2F7CEC1C9AFB /* CreateRequestViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B682D2D072B8AE48CA5E9328 /* CreateRequestViewModel.swift */; };
+		8BC880B6BE61B8DC7D55F372 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5474B83FECD609636F96F2E6 /* HomeView.swift */; };
+		8E6C87BB4052851F000164F9 /* StatusBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A847B15AE4F198D8190A88CC /* StatusBadgeView.swift */; };
+		9067B012233970A3B1CB3760 /* AppCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA60F1D49DDABE93F726C73B /* AppCard.swift */; };
+		911BE31B7533D00265C3CE85 /* SectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F590D1EC74C8BE5A8CE4E512 /* SectionHeader.swift */; };
+		9EC2C21211A61975F02870CD /* AppDesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D906D857982F492815406A0 /* AppDesignSystem.swift */; };
+		9FB230CAD9BAF51BC404065F /* SourcingRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E2C3384397716ECBF0EA70 /* SourcingRequest.swift */; };
+		A0E8CDB5EA126C5221952F3E /* ValueCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A037B33B4E008C7C259A4FF5 /* ValueCard.swift */; };
+		A2E5D1B1F50AE1C971A47CFC /* RequestDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238B90F37A7FB23C93DF39EE /* RequestDetailView.swift */; };
+		B3E5900CB750F382BF327CD8 /* SourcingRequestServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2654F33C6DFF44A4B9F2816 /* SourcingRequestServiceProtocol.swift */; };
+		B978B754A7F0EF3C51F7D025 /* AppSplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB14C6A175399E708DA3617F /* AppSplashView.swift */; };
+		BA31F190DCF915A133B70219 /* NexTradeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C97902B77FFD30E392E0274 /* NexTradeApp.swift */; };
+		CA09561A596335E25D7581A7 /* RequestsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2945CC3669D5BE4F14BC8192 /* RequestsListView.swift */; };
+		D2448E246B72B031D3D412D7 /* SourcingRequestStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D414D561F3C99C24B6F0AD7 /* SourcingRequestStatus.swift */; };
+		DBF97C35DD5A6A2B71C57160 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6012F8C472B6878A99CB2AD4 /* ProfileView.swift */; };
+		DD2BE2C329CAC3159E2F6A11 /* InputField.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD2C254B0C98A7D29EF1E06 /* InputField.swift */; };
+		E00E00CB7B38E4E502C5D77C /* EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 186D5FE03E603761D41897FA /* EmptyStateView.swift */; };
+		ECEF227E905D7ECCC26E322A /* AppContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96725817405D36A2BBB68D27 /* AppContainer.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0563EA8B60ACFBBEBAA8EDF2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		186D5FE03E603761D41897FA /* EmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateView.swift; sourceTree = "<group>"; };
+		213D05E5C53BF6E18B8444E8 /* RequestsListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestsListViewModel.swift; sourceTree = "<group>"; };
+		238B90F37A7FB23C93DF39EE /* RequestDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestDetailView.swift; sourceTree = "<group>"; };
+		2945CC3669D5BE4F14BC8192 /* RequestsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestsListView.swift; sourceTree = "<group>"; };
+		2F6C1492F9F0ED2FB63FA151 /* AppRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootView.swift; sourceTree = "<group>"; };
+		36E2C3384397716ECBF0EA70 /* SourcingRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourcingRequest.swift; sourceTree = "<group>"; };
+		3A04933CC400073A64335A9C /* AppLocalization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLocalization.swift; sourceTree = "<group>"; };
+		4C89C48F96441296E51B8097 /* CreateRequestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRequestView.swift; sourceTree = "<group>"; };
+		4D414D561F3C99C24B6F0AD7 /* SourcingRequestStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourcingRequestStatus.swift; sourceTree = "<group>"; };
+		5015EDC7C2FFECB0FB2A6067 /* AppTopBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTopBar.swift; sourceTree = "<group>"; };
+		5474B83FECD609636F96F2E6 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		5A7DE4BB4366A6E13D66E446 /* HomeDashboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeDashboardViewModel.swift; sourceTree = "<group>"; };
+		5D541AA1B89F6145839E6E99 /* MockSourcingRequestService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockSourcingRequestService.swift; sourceTree = "<group>"; };
+		5D906D857982F492815406A0 /* AppDesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDesignSystem.swift; sourceTree = "<group>"; };
+		6012F8C472B6878A99CB2AD4 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		7D41CD334FB5846D5DC0D85F /* PrimaryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButton.swift; sourceTree = "<group>"; };
+		8D3FEB1BB36C3680F9DEF790 /* CategoryPill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPill.swift; sourceTree = "<group>"; };
+		96725817405D36A2BBB68D27 /* AppContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppContainer.swift; sourceTree = "<group>"; };
+		9C97902B77FFD30E392E0274 /* NexTradeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NexTradeApp.swift; sourceTree = "<group>"; };
+		A037B33B4E008C7C259A4FF5 /* ValueCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueCard.swift; sourceTree = "<group>"; };
+		A0AB4FE5C95394F4796791F6 /* TextAreaField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAreaField.swift; sourceTree = "<group>"; };
+		A847B15AE4F198D8190A88CC /* StatusBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBadgeView.swift; sourceTree = "<group>"; };
+		AA60F1D49DDABE93F726C73B /* AppCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCard.swift; sourceTree = "<group>"; };
+		AAD2C254B0C98A7D29EF1E06 /* InputField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputField.swift; sourceTree = "<group>"; };
+		AB14C6A175399E708DA3617F /* AppSplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSplashView.swift; sourceTree = "<group>"; };
+		B682D2D072B8AE48CA5E9328 /* CreateRequestViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRequestViewModel.swift; sourceTree = "<group>"; };
+		C2654F33C6DFF44A4B9F2816 /* SourcingRequestServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourcingRequestServiceProtocol.swift; sourceTree = "<group>"; };
+		DA3F9C65DB9089F9F600C10B /* ThemeToggleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeToggleButton.swift; sourceTree = "<group>"; };
+		E9093A23C361F2B82694FDEA /* NexTrade.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = NexTrade.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F590D1EC74C8BE5A8CE4E512 /* SectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeader.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		172A47AFA0A717C74F35A943 /* NexTrade */ = {
+			isa = PBXGroup;
+			children = (
+				2F6C1492F9F0ED2FB63FA151 /* AppRootView.swift */,
+				0563EA8B60ACFBBEBAA8EDF2 /* Assets.xcassets */,
+				9C97902B77FFD30E392E0274 /* NexTradeApp.swift */,
+				C6BC9F2E9A30783C564890CB /* Core */,
+				A6981D9F044D825D5FC95AF1 /* Features */,
+				2DA34C309F2AC1B14B5B61E3 /* Shared */,
+			);
+			path = NexTrade;
+			sourceTree = "<group>";
+		};
+		2DA34C309F2AC1B14B5B61E3 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				AA60F1D49DDABE93F726C73B /* AppCard.swift */,
+				5D906D857982F492815406A0 /* AppDesignSystem.swift */,
+				3A04933CC400073A64335A9C /* AppLocalization.swift */,
+				AB14C6A175399E708DA3617F /* AppSplashView.swift */,
+				5015EDC7C2FFECB0FB2A6067 /* AppTopBar.swift */,
+				8D3FEB1BB36C3680F9DEF790 /* CategoryPill.swift */,
+				186D5FE03E603761D41897FA /* EmptyStateView.swift */,
+				AAD2C254B0C98A7D29EF1E06 /* InputField.swift */,
+				7D41CD334FB5846D5DC0D85F /* PrimaryButton.swift */,
+				F590D1EC74C8BE5A8CE4E512 /* SectionHeader.swift */,
+				A847B15AE4F198D8190A88CC /* StatusBadgeView.swift */,
+				A0AB4FE5C95394F4796791F6 /* TextAreaField.swift */,
+				DA3F9C65DB9089F9F600C10B /* ThemeToggleButton.swift */,
+				A037B33B4E008C7C259A4FF5 /* ValueCard.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		A6981D9F044D825D5FC95AF1 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				BDCA1B731377C560240BCA64 /* CreateRequest */,
+				EAF8DA1E27307243E500211F /* Home */,
+				BFC46F689C19817081456F2B /* Profile */,
+				E7DC4E66B1511D58591E090B /* Requests */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		BDCA1B731377C560240BCA64 /* CreateRequest */ = {
+			isa = PBXGroup;
+			children = (
+				4C89C48F96441296E51B8097 /* CreateRequestView.swift */,
+				B682D2D072B8AE48CA5E9328 /* CreateRequestViewModel.swift */,
+			);
+			path = CreateRequest;
+			sourceTree = "<group>";
+		};
+		BFC46F689C19817081456F2B /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				6012F8C472B6878A99CB2AD4 /* ProfileView.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		BFF297DFF29EC1CDD5FAB286 = {
+			isa = PBXGroup;
+			children = (
+				172A47AFA0A717C74F35A943 /* NexTrade */,
+				D9D0B4843DF35F146974EC94 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C6BC9F2E9A30783C564890CB /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				96725817405D36A2BBB68D27 /* AppContainer.swift */,
+				5D541AA1B89F6145839E6E99 /* MockSourcingRequestService.swift */,
+				36E2C3384397716ECBF0EA70 /* SourcingRequest.swift */,
+				C2654F33C6DFF44A4B9F2816 /* SourcingRequestServiceProtocol.swift */,
+				4D414D561F3C99C24B6F0AD7 /* SourcingRequestStatus.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		D9D0B4843DF35F146974EC94 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E9093A23C361F2B82694FDEA /* NexTrade.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E7DC4E66B1511D58591E090B /* Requests */ = {
+			isa = PBXGroup;
+			children = (
+				238B90F37A7FB23C93DF39EE /* RequestDetailView.swift */,
+				2945CC3669D5BE4F14BC8192 /* RequestsListView.swift */,
+				213D05E5C53BF6E18B8444E8 /* RequestsListViewModel.swift */,
+			);
+			path = Requests;
+			sourceTree = "<group>";
+		};
+		EAF8DA1E27307243E500211F /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				5A7DE4BB4366A6E13D66E446 /* HomeDashboardViewModel.swift */,
+				5474B83FECD609636F96F2E6 /* HomeView.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2CA3AB8F900ABAD1C982E67D /* NexTrade */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5F3FE80E204757733FFB7C8B /* Build configuration list for PBXNativeTarget "NexTrade" */;
+			buildPhases = (
+				BCE22BAB2FBD032111E0A179 /* Sources */,
+				2542A01B299C903019A757E4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NexTrade;
+			packageProductDependencies = (
+			);
+			productName = NexTrade;
+			productReference = E9093A23C361F2B82694FDEA /* NexTrade.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0FD6260512E8ACBAF723DF31 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+			};
+			buildConfigurationList = 07AA1F859A6CF5DD8DACA8C2 /* Build configuration list for PBXProject "NexTrade" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = BFF297DFF29EC1CDD5FAB286;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2CA3AB8F900ABAD1C982E67D /* NexTrade */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2542A01B299C903019A757E4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3AA09696C4A3EE8F417FCB35 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		BCE22BAB2FBD032111E0A179 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9067B012233970A3B1CB3760 /* AppCard.swift in Sources */,
+				ECEF227E905D7ECCC26E322A /* AppContainer.swift in Sources */,
+				9EC2C21211A61975F02870CD /* AppDesignSystem.swift in Sources */,
+				6B08FE1E9625142E675AB793 /* AppLocalization.swift in Sources */,
+				0D18023DCF7534D6CF5DB8F3 /* AppRootView.swift in Sources */,
+				B978B754A7F0EF3C51F7D025 /* AppSplashView.swift in Sources */,
+				44A73040ADB3B9DFCF07A472 /* AppTopBar.swift in Sources */,
+				64985CC8BF9F3D98ABA4C5EA /* CategoryPill.swift in Sources */,
+				01FF9D9E95E36470BAA1DB57 /* CreateRequestView.swift in Sources */,
+				6EB2C44EFE6F2F7CEC1C9AFB /* CreateRequestViewModel.swift in Sources */,
+				E00E00CB7B38E4E502C5D77C /* EmptyStateView.swift in Sources */,
+				38A3B8917A0DCDBC4D225EA9 /* HomeDashboardViewModel.swift in Sources */,
+				8BC880B6BE61B8DC7D55F372 /* HomeView.swift in Sources */,
+				DD2BE2C329CAC3159E2F6A11 /* InputField.swift in Sources */,
+				2E9C907A25D39F5B58EA2D02 /* MockSourcingRequestService.swift in Sources */,
+				BA31F190DCF915A133B70219 /* NexTradeApp.swift in Sources */,
+				2C1BAE9AF6374EC6F031F148 /* PrimaryButton.swift in Sources */,
+				DBF97C35DD5A6A2B71C57160 /* ProfileView.swift in Sources */,
+				A2E5D1B1F50AE1C971A47CFC /* RequestDetailView.swift in Sources */,
+				CA09561A596335E25D7581A7 /* RequestsListView.swift in Sources */,
+				432AD0632B6ECD569137D5D3 /* RequestsListViewModel.swift in Sources */,
+				911BE31B7533D00265C3CE85 /* SectionHeader.swift in Sources */,
+				9FB230CAD9BAF51BC404065F /* SourcingRequest.swift in Sources */,
+				B3E5900CB750F382BF327CD8 /* SourcingRequestServiceProtocol.swift in Sources */,
+				D2448E246B72B031D3D412D7 /* SourcingRequestStatus.swift in Sources */,
+				8E6C87BB4052851F000164F9 /* StatusBadgeView.swift in Sources */,
+				1C4FDDC4778417EF11B5FBA0 /* TextAreaField.swift in Sources */,
+				4DFA649282C5A75D661201DA /* ThemeToggleButton.swift in Sources */,
+				A0E8CDB5EA126C5221952F3E /* ValueCard.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		46F81197387996B7D7FE0933 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = NexTrade;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.nextrade.app;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		8BB69B28FBB60138538C4D52 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		CD7D7B83A82AEF6564E95296 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		CE1E49BB99A4F0390E281476 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = NexTrade;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.nextrade.app;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		07AA1F859A6CF5DD8DACA8C2 /* Build configuration list for PBXProject "NexTrade" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8BB69B28FBB60138538C4D52 /* Debug */,
+				CD7D7B83A82AEF6564E95296 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		5F3FE80E204757733FFB7C8B /* Build configuration list for PBXNativeTarget "NexTrade" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				46F81197387996B7D7FE0933 /* Debug */,
+				CE1E49BB99A4F0390E281476 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0FD6260512E8ACBAF723DF31 /* Project object */;
+}
