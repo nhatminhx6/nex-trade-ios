@@ -189,47 +189,33 @@ private struct RequestRowCard: View {
     let request: SourcingRequest
 
     var body: some View {
-        AppCard(padding: AppSpacing.large, radius: AppRadius.large) {
-            HStack(spacing: AppSpacing.medium) {
-                Rectangle()
-                    .fill(request.status.badgeColor)
-                    .frame(width: 4)
-                    .clipShape(Capsule())
-
-                VStack(alignment: .leading, spacing: 14) {
-                    HStack(alignment: .top, spacing: AppSpacing.medium) {
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text(request.productName)
-                                .font(.title3.weight(.semibold))
-                                .foregroundStyle(AppColor.primaryText)
-                                .fixedSize(horizontal: false, vertical: true)
-
-                            HStack(spacing: AppSpacing.xsmall) {
-                                MetadataText(container.localizedCategory(request.category))
-                                MetadataDot()
-                                MetadataText(request.createdAt.formatted(date: .abbreviated, time: .shortened))
-                            }
-                        }
-
-                        Spacer(minLength: AppSpacing.small)
-
-                        StatusBadgeView(status: request.status)
+        AppListItem {
+            VStack(alignment: .leading, spacing: 0) {
+                HStack(alignment: .top, spacing: AppSpacing.medium) {
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text(request.productName)
+                            .font(.headline.weight(.semibold))
+                            .foregroundStyle(AppColor.primaryText)
+                            .lineLimit(1)
                     }
 
-                    Hairline()
+                    Spacer(minLength: AppSpacing.small)
 
-                    HStack {
-                        Text(container.t("requests.row.note"))
-                            .font(.caption.weight(.medium))
-                            .foregroundStyle(AppColor.secondaryText)
-
-                        Spacer()
-
-                        Image(systemName: "chevron.right")
-                            .font(.caption.weight(.bold))
-                            .foregroundStyle(AppColor.secondaryText)
-                    }
+                    StatusBadgeView(status: request.status)
                 }
+
+                Hairline()
+                    .padding(.vertical, 10)
+
+                HStack(spacing: 8) {
+                    Image(systemName: "clock")
+                    Text(request.createdAt.formatted(date: .abbreviated, time: .shortened))
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .font(.caption.weight(.bold))
+                }
+                .font(.subheadline)
+                .foregroundStyle(AppColor.secondaryText)
             }
         }
     }

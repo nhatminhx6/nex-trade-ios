@@ -2,6 +2,7 @@ import SwiftUI
 
 enum AppTab: Hashable {
     case home
+    case discover
     case requests
     case profile
 }
@@ -9,16 +10,40 @@ enum AppTab: Hashable {
 @MainActor
 final class AppContainer: ObservableObject {
     let sourcingRequestService: SourcingRequestServiceProtocol
+    let approvedListingService: ApprovedListingServiceProtocol
+    let authenticationService: AuthenticationServiceProtocol
     @Published var isDarkMode = false
     @Published var language: AppLanguage = .vietnamese
     @Published var selectedTab: AppTab = .home
+    @Published private(set) var authState: AuthenticationState = .loading
+    private let isUITesting: Bool
 
     var preferredColorScheme: ColorScheme {
         isDarkMode ? .dark : .light
     }
 
-    init(sourcingRequestService: SourcingRequestServiceProtocol = MockSourcingRequestService()) {
-        self.sourcingRequestService = sourcingRequestService
+    var currentUser: AppUser? {
+        guard case let .authenticated(user) = authState else { return nil }
+        return user
+    }
+
+    init(apiService: PocketBaseService = PocketBaseService()) {
+        self.sourcingRequestService = apiService
+        self.approvedListingService = apiService
+        self.authenticationService = apiService
+        isUITesting = ProcessInfo.processInfo.arguments.contains("-ui-testing-authenticated")
+#if DEBUG
+        if isUITesting {
+            authState = .authenticated(AppUser(
+                id: "ui-test-buyer",
+                email: "buyer.demo@nextrade.local",
+                name: "UI Test Buyer",
+                phone: "0976999864",
+                companyName: "NexTrade Test Co.",
+                role: "buyer"
+            ))
+        }
+#endif
     }
 
     func toggleDarkMode() {
@@ -31,6 +56,26 @@ final class AppContainer: ObservableObject {
 
     func t(_ key: String) -> String {
         AppText.values[key]?[language] ?? key
+    }
+
+    func restoreSession() async {
+        guard !isUITesting else { return }
+        if let session = await authenticationService.restoreSession() {
+            authState = .authenticated(session.user)
+        } else {
+            authState = .unauthenticated
+        }
+    }
+
+    func login(email: String, password: String) async throws {
+        let user = try await authenticationService.login(email: email, password: password)
+        authState = .authenticated(user)
+    }
+
+    func logout() async {
+        await authenticationService.logout()
+        authState = .unauthenticated
+        selectedTab = .home
     }
 
     func localizedCategory(_ category: String) -> String {
@@ -54,4 +99,10 @@ final class AppContainer: ObservableObject {
             value
         }
     }
+}
+
+enum AuthenticationState: Equatable {
+    case loading
+    case unauthenticated
+    case authenticated(AppUser)
 }

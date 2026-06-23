@@ -13,22 +13,22 @@ struct InputField: View {
     var body: some View {
         VStack(alignment: .leading, spacing: AppSpacing.xsmall) {
             Text(label)
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(AppColor.primaryText)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(AppColor.secondaryText)
 
             TextField(placeholder, text: $text)
-                .font(.body)
+                .font(.subheadline)
                 .foregroundStyle(AppColor.primaryText)
                 .keyboardType(keyboardType)
                 .textContentType(textContentType)
                 .textInputAutocapitalization(autocapitalization)
                 .autocorrectionDisabled(autocorrectionDisabled)
                 .padding(.horizontal, AppSpacing.medium)
-                .frame(minHeight: 48)
+                .frame(minHeight: 44)
                 .background(AppColor.backgroundElevated)
-                .clipShape(RoundedRectangle(cornerRadius: AppRadius.medium, style: .continuous))
+                .clipShape(RoundedRectangle(cornerRadius: AppRadius.small, style: .continuous))
                 .overlay {
-                    RoundedRectangle(cornerRadius: AppRadius.medium, style: .continuous)
+                    RoundedRectangle(cornerRadius: AppRadius.small, style: .continuous)
                         .stroke(error == nil ? AppColor.border : AppColor.error, lineWidth: 1)
                 }
 

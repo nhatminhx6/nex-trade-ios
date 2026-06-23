@@ -11,7 +11,7 @@ actor MockSourcingRequestService: SourcingRequestServiceProtocol {
         requests
     }
 
-    func fetchRequest(id: UUID) async throws -> SourcingRequest? {
+    func fetchRequest(id: String) async throws -> SourcingRequest? {
         requests.first { $0.id == id }
     }
 }

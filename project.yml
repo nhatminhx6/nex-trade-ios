@@ -1,4 +1,12 @@
 name: NexTrade
+schemes:
+  NexTrade:
+    build:
+      targets:
+        NexTrade: all
+    test:
+      targets:
+        - NexTradeUITests
 options:
   bundleIdPrefix: com.nextrade
   deploymentTarget:
@@ -16,9 +24,18 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.nextrade.app
-        GENERATE_INFOPLIST_FILE: YES
-        INFOPLIST_KEY_CFBundleDisplayName: NexTrade
-        INFOPLIST_KEY_UILaunchScreen_Generation: YES
-        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        GENERATE_INFOPLIST_FILE: NO
+        INFOPLIST_FILE: NexTrade/Info.plist
         TARGETED_DEVICE_FAMILY: "1"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+  NexTradeUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - NexTradeUITests
+    dependencies:
+      - target: NexTrade
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.nextrade.app.uitests
+        GENERATE_INFOPLIST_FILE: YES

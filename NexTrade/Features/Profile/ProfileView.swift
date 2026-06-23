@@ -12,6 +12,7 @@ struct ProfileView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: AppSpacing.large) {
+                accountCard
                 serviceSummaryCard
                 contactCard
                 currentServicesCard
@@ -21,6 +22,36 @@ struct ProfileView: View {
         }
         .background(AppColor.background)
         .navigationTitle(container.t("profile.title"))
+    }
+
+    @ViewBuilder
+    private var accountCard: some View {
+        if case let .authenticated(user) = container.authState {
+            AppCard(padding: 18, radius: AppRadius.large) {
+                HStack(spacing: AppSpacing.medium) {
+                    Image(systemName: "person.crop.circle.fill")
+                        .font(.title)
+                        .foregroundStyle(AppColor.primaryAccent)
+
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text(user.displayName)
+                            .font(.headline)
+                            .foregroundStyle(AppColor.primaryText)
+                        Text(user.email)
+                            .font(.caption)
+                            .foregroundStyle(AppColor.secondaryText)
+                    }
+
+                    Spacer()
+
+                    Button(container.t("profile.logout")) {
+                        Task { await container.logout() }
+                    }
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(AppColor.primaryAccent)
+                }
+            }
+        }
     }
 
     private var serviceSummaryCard: some View {

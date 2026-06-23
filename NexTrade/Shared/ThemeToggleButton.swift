@@ -8,24 +8,36 @@ struct ThemeToggleButton: View {
             container.toggleDarkMode()
         } label: {
             Image(systemName: container.isDarkMode ? "sun.max.fill" : "moon.fill")
-                .font(.subheadline.weight(.bold))
-                .foregroundStyle(AppColor.primaryAccent)
-                .frame(width: 34, height: 34)
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(AppColor.primaryText)
+                .frame(width: 32, height: 32)
                 .background(AppColor.surface)
-                .clipShape(Circle())
+                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                 .overlay {
-                    Circle()
-                        .stroke(AppColor.glassStroke.opacity(0.75), lineWidth: 1)
+                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        .stroke(AppColor.border, lineWidth: 1)
                 }
-                .shadow(color: AppColor.primaryAccent.opacity(0.24), radius: 14, x: 0, y: 7)
         }
+        .buttonStyle(.plain)
         .accessibilityLabel(container.isDarkMode ? "Chuyển sang giao diện sáng" : "Chuyển sang giao diện tối")
     }
 }
 
 struct ThemeToolbarItem: ToolbarContent {
     var body: some ToolbarContent {
-        ToolbarItemGroup(placement: .topBarTrailing) {
+        ToolbarItem(placement: .topBarTrailing) {
+            ThemeToggleButton()
+        }
+
+        ToolbarItem(placement: .topBarTrailing) {
+            LanguageToggleButton()
+        }
+    }
+}
+
+struct AppQuickControls: View {
+    var body: some View {
+        HStack(spacing: 8) {
             LanguageToggleButton()
             ThemeToggleButton()
         }
@@ -42,15 +54,15 @@ struct LanguageToggleButton: View {
             Text(container.language.rawValue)
                 .font(.caption.weight(.bold))
                 .foregroundStyle(AppColor.primaryAccent)
-                .frame(width: 36, height: 34)
+                .frame(width: 32, height: 32)
                 .background(AppColor.surface)
-                .clipShape(Capsule())
+                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                 .overlay {
-                    Capsule()
-                        .stroke(AppColor.glassStroke.opacity(0.75), lineWidth: 1)
+                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        .stroke(AppColor.border, lineWidth: 1)
                 }
-                .shadow(color: AppColor.primaryAccent.opacity(0.16), radius: 12, x: 0, y: 6)
         }
+        .buttonStyle(.plain)
         .accessibilityLabel(container.language == .vietnamese ? "Switch to English" : "Đổi sang tiếng Việt")
     }
 }

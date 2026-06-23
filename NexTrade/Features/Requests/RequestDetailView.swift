@@ -64,12 +64,18 @@ struct RequestDetailView: View {
     private var productSection: some View {
         DetailSection(title: container.t("detail.product.section")) {
             DetailRow(label: container.t("detail.category"), value: container.localizedCategory(request.category))
+            DetailRow(label: container.t("detail.trade.intent"), value: tradeIntentTitle)
+            DetailRow(label: container.t("detail.trade.time"), value: request.neededAt.formatted(date: .long, time: .omitted))
             DetailRow(label: container.t("detail.quantity"), value: request.quantity)
             DetailRow(label: container.t("detail.market"), value: request.targetMarket)
             DetailRow(label: container.t("detail.budget"), value: request.budget)
             DetailRow(label: container.t("detail.note"), value: request.note)
             DetailRow(label: container.t("detail.status"), value: request.status.localizedDisplayTitle(language: container.language))
         }
+    }
+
+    private var tradeIntentTitle: String {
+        request.tradeIntent == .buy ? container.t("create.trade.buy") : container.t("create.trade.sell")
     }
 
     private var contactSection: some View {

@@ -9,19 +9,19 @@ struct TextAreaField: View {
     var body: some View {
         VStack(alignment: .leading, spacing: AppSpacing.xsmall) {
             Text(label)
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(AppColor.primaryText)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(AppColor.secondaryText)
 
             TextField(placeholder, text: $text, axis: .vertical)
-                .font(.body)
+                .font(.subheadline)
                 .foregroundStyle(AppColor.primaryText)
-                .lineLimit(4...7)
+                .lineLimit(3...5)
                 .padding(AppSpacing.medium)
-                .frame(minHeight: 112, alignment: .topLeading)
+                .frame(minHeight: 88, alignment: .topLeading)
                 .background(AppColor.backgroundElevated)
-                .clipShape(RoundedRectangle(cornerRadius: AppRadius.medium, style: .continuous))
+                .clipShape(RoundedRectangle(cornerRadius: AppRadius.small, style: .continuous))
                 .overlay {
-                    RoundedRectangle(cornerRadius: AppRadius.medium, style: .continuous)
+                    RoundedRectangle(cornerRadius: AppRadius.small, style: .continuous)
                         .stroke(error == nil ? AppColor.border : AppColor.error, lineWidth: 1)
                 }
 

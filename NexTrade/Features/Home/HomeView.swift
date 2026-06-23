@@ -84,7 +84,7 @@ struct HomeView: View {
             }
 
             NavigationLink {
-                CreateRequestView(service: container.sourcingRequestService)
+                CreateRequestView(service: container.sourcingRequestService, currentUser: container.currentUser)
             } label: {
                 HStack {
                     Text(container.t("home.cta"))

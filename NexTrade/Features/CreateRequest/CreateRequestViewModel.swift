@@ -6,6 +6,8 @@ final class CreateRequestViewModel: ObservableObject {
     @Published var category = "category.fruit"
     @Published var quantity = ""
     @Published var targetMarket = ""
+    @Published var tradeIntent: TradeIntent = .buy
+    @Published var neededAt = Date()
     @Published var budget = ""
     @Published var note = ""
     @Published var contactName = ""
@@ -26,8 +28,11 @@ final class CreateRequestViewModel: ObservableObject {
         case contactEmail
     }
 
-    init(service: SourcingRequestServiceProtocol) {
+    init(service: SourcingRequestServiceProtocol, currentUser: AppUser? = nil) {
         self.service = service
+        contactName = currentUser?.name ?? ""
+        contactPhone = currentUser?.phone ?? ""
+        contactEmail = currentUser?.email ?? ""
     }
 
     func submit() async {
@@ -46,6 +51,8 @@ final class CreateRequestViewModel: ObservableObject {
             category: category.trimmed,
             quantity: quantity.trimmed,
             targetMarket: targetMarket.trimmed,
+            tradeIntent: tradeIntent,
+            neededAt: Calendar.current.startOfDay(for: neededAt),
             budget: budget.trimmed,
             note: note.trimmed,
             contactName: contactName.trimmed,
@@ -56,6 +63,8 @@ final class CreateRequestViewModel: ObservableObject {
         do {
             try await service.submitRequest(request)
             didSubmit = true
+        } catch let error as APIError {
+            errorMessageKey = error.messageKey
         } catch {
             errorMessageKey = "error.submit"
         }
@@ -79,6 +88,16 @@ final class CreateRequestViewModel: ObservableObject {
             return false
         }
 
+        if !contactEmail.trimmed.isEmpty && !contactEmail.trimmed.isValidEmail {
+            fieldErrorKeys[.contactEmail] = "error.email.invalid"
+            return false
+        }
+
+        if !contactPhone.trimmed.isEmpty && !contactPhone.trimmed.isValidPhoneNumber {
+            fieldErrorKeys[.contactPhone] = "error.phone.invalid"
+            return false
+        }
+
         return true
     }
 }
@@ -86,5 +105,14 @@ final class CreateRequestViewModel: ObservableObject {
 private extension String {
     var trimmed: String {
         trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    var isValidEmail: Bool {
+        range(of: #"^[^\s@]+@[^\s@]+\.[^\s@]+$"#, options: .regularExpression) != nil
+    }
+
+    var isValidPhoneNumber: Bool {
+        let digits = filter(\.isNumber)
+        return digits.count >= 9 && digits.count <= 15
     }
 }

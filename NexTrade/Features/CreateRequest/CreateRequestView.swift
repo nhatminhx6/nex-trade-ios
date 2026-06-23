@@ -4,21 +4,20 @@ struct CreateRequestView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var container: AppContainer
     @StateObject private var viewModel: CreateRequestViewModel
+    @State private var isShowingAdditional = false
 
-    init(service: SourcingRequestServiceProtocol) {
-        _viewModel = StateObject(wrappedValue: CreateRequestViewModel(service: service))
+    init(service: SourcingRequestServiceProtocol, currentUser: AppUser? = nil) {
+        _viewModel = StateObject(wrappedValue: CreateRequestViewModel(service: service, currentUser: currentUser))
     }
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: AppSpacing.large) {
+            VStack(alignment: .leading, spacing: AppSpacing.medium) {
                 header
-                productSection
-                additionalSection
-                contactSection
+                requestForm
             }
             .padding(.horizontal, AppSpacing.large)
-            .padding(.vertical, AppSpacing.large)
+            .padding(.vertical, AppSpacing.medium)
             .padding(.bottom, 92)
         }
         .safeAreaInset(edge: .bottom) {
@@ -37,7 +36,7 @@ struct CreateRequestView: View {
                 }
             }
             .padding(.horizontal, AppSpacing.large)
-            .padding(.top, AppSpacing.medium)
+            .padding(.top, AppSpacing.small)
             .padding(.bottom, AppSpacing.small)
             .background(.ultraThinMaterial)
         }
@@ -54,79 +53,139 @@ struct CreateRequestView: View {
         }
     }
 
-    private var header: some View {
-        VStack(alignment: .leading, spacing: 18) {
-            AppTopBar(eyebrow: "REQUEST INTAKE", title: container.t("create.top.title"))
-
-            HStack(alignment: .top, spacing: AppSpacing.medium) {
-                Text("01")
-                    .font(.caption.weight(.bold))
-                    .foregroundStyle(.white)
-                    .frame(width: 34, height: 34)
-                    .background(AppColor.primaryAccent)
-                    .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-
-                Text(container.t("create.helper"))
-                    .font(.subheadline.weight(.medium))
-                    .foregroundStyle(AppColor.secondaryText)
-                    .fixedSize(horizontal: false, vertical: true)
+    private var requestForm: some View {
+        AppListItem {
+            VStack(alignment: .leading, spacing: AppSpacing.medium) {
+                tradeSection
+                Hairline()
+                productSection
+                Hairline()
+                contactSection
+                Hairline()
+                additionalSection
             }
-            .padding(16)
-            .background(AppColor.surface)
-            .clipShape(RoundedRectangle(cornerRadius: AppRadius.large, style: .continuous))
-            .overlay {
-                RoundedRectangle(cornerRadius: AppRadius.large, style: .continuous)
-                    .stroke(AppColor.glassStroke.opacity(0.85), lineWidth: 1)
-            }
-            .shadow(color: Color.black.opacity(0.11), radius: 18, x: 0, y: 10)
         }
     }
 
-    private var productSection: some View {
-        AppCard(padding: 18, radius: AppRadius.large) {
-            VStack(alignment: .leading, spacing: AppSpacing.large) {
-                SectionHeader(title: container.t("create.product.section"))
+    private var header: some View {
+        VStack(alignment: .leading, spacing: 5) {
+            Text(container.t("create.top.title"))
+                .font(.title2.weight(.bold))
+                .foregroundStyle(AppColor.primaryText)
 
-                InputField(
-                    label: container.t("create.product.name"),
-                    placeholder: container.t("create.product.placeholder"),
-                    text: $viewModel.productName,
-                    error: localizedFieldError(.productName)
-                )
+            Text(container.t("create.helper"))
+                .font(.subheadline)
+                .foregroundStyle(AppColor.secondaryText)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
 
-                categoryPicker
+    private var tradeSection: some View {
+        VStack(alignment: .leading, spacing: AppSpacing.medium) {
+            SectionHeader(title: container.t("create.trade.section"))
 
-                InputField(
-                    label: container.t("create.quantity"),
-                    placeholder: container.t("create.quantity.placeholder"),
-                    text: $viewModel.quantity
-                )
-
-                InputField(
-                    label: container.t("create.market"),
-                    placeholder: container.t("create.market.placeholder"),
-                    text: $viewModel.targetMarket
-                )
+            HStack(spacing: 4) {
+                tradeIntentButton(.buy)
+                tradeIntentButton(.sell)
             }
+            .padding(4)
+            .background(AppColor.backgroundElevated)
+            .clipShape(RoundedRectangle(cornerRadius: AppRadius.small, style: .continuous))
+
+            VStack(alignment: .leading, spacing: AppSpacing.xsmall) {
+                Text(container.t("create.trade.date"))
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(AppColor.secondaryText)
+
+                DatePicker("", selection: $viewModel.neededAt, displayedComponents: .date)
+                    .labelsHidden()
+                    .datePickerStyle(.compact)
+                    .tint(AppColor.primaryAccent)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+        }
+    }
+
+    private func tradeIntentButton(_ intent: TradeIntent) -> some View {
+        let isSelected = viewModel.tradeIntent == intent
+        return Button {
+            viewModel.tradeIntent = intent
+        } label: {
+            Text(intent == .buy ? container.t("create.trade.buy") : container.t("create.trade.sell"))
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(isSelected ? Color.white : AppColor.secondaryText)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 9)
+                .background(isSelected ? AppColor.primaryAccent : Color.clear)
+                .clipShape(RoundedRectangle(cornerRadius: 7, style: .continuous))
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var productSection: some View {
+        VStack(alignment: .leading, spacing: AppSpacing.medium) {
+            SectionHeader(title: container.t("create.product.section"))
+
+            InputField(
+                label: container.t("create.product.name"),
+                placeholder: container.t("create.product.placeholder"),
+                text: $viewModel.productName,
+                error: localizedFieldError(.productName)
+            )
+
+            categoryPicker
+
+            InputField(
+                label: container.t("create.quantity"),
+                placeholder: container.t("create.quantity.placeholder"),
+                text: $viewModel.quantity
+            )
+
+            InputField(
+                label: container.t("create.market"),
+                placeholder: container.t("create.market.placeholder"),
+                text: $viewModel.targetMarket
+            )
         }
     }
 
     private var categoryPicker: some View {
         VStack(alignment: .leading, spacing: AppSpacing.xsmall) {
             Text(container.t("create.category"))
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(AppColor.primaryText)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(AppColor.secondaryText)
 
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: AppSpacing.small) {
-                    ForEach(viewModel.categories, id: \.self) { category in
-                        CategoryPill(title: container.localizedCategory(category), isSelected: viewModel.category == category) {
+            Menu {
+                ForEach(viewModel.categories, id: \.self) { category in
+                    Button {
                             viewModel.category = category
                             viewModel.fieldErrorKeys[.category] = nil
+                    } label: {
+                        if viewModel.category == category {
+                            Label(container.localizedCategory(category), systemImage: "checkmark")
+                        } else {
+                            Text(container.localizedCategory(category))
                         }
                     }
                 }
-                .padding(.vertical, 1)
+            } label: {
+                HStack {
+                    Text(container.localizedCategory(viewModel.category))
+                        .font(.subheadline)
+                        .foregroundStyle(AppColor.primaryText)
+                    Spacer()
+                    Image(systemName: "chevron.down")
+                        .font(.caption.weight(.bold))
+                        .foregroundStyle(AppColor.secondaryText)
+                }
+                .padding(.horizontal, AppSpacing.medium)
+                .frame(minHeight: 44)
+                .background(AppColor.backgroundElevated)
+                .clipShape(RoundedRectangle(cornerRadius: AppRadius.small, style: .continuous))
+                .overlay {
+                    RoundedRectangle(cornerRadius: AppRadius.small, style: .continuous)
+                        .stroke(localizedFieldError(.category) == nil ? AppColor.border : AppColor.error, lineWidth: 1)
+                }
             }
 
             if let error = localizedFieldError(.category) {
@@ -138,10 +197,25 @@ struct CreateRequestView: View {
     }
 
     private var additionalSection: some View {
-        AppCard(padding: 18, radius: AppRadius.large) {
-            VStack(alignment: .leading, spacing: AppSpacing.large) {
-                SectionHeader(title: container.t("create.additional.section"))
+        VStack(alignment: .leading, spacing: AppSpacing.medium) {
+            Button {
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    isShowingAdditional.toggle()
+                }
+            } label: {
+                HStack {
+                    Text(container.t("create.additional.section"))
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(AppColor.primaryText)
+                    Spacer()
+                    Image(systemName: isShowingAdditional ? "chevron.up" : "chevron.down")
+                        .font(.caption.weight(.bold))
+                        .foregroundStyle(AppColor.secondaryText)
+                }
+            }
+            .buttonStyle(.plain)
 
+            if isShowingAdditional {
                 InputField(
                     label: container.t("create.budget"),
                     placeholder: container.t("create.budget.placeholder"),
@@ -158,39 +232,37 @@ struct CreateRequestView: View {
     }
 
     private var contactSection: some View {
-        AppCard(padding: 18, radius: AppRadius.large) {
-            VStack(alignment: .leading, spacing: AppSpacing.large) {
-                SectionHeader(title: container.t("create.contact.section"), subtitle: container.t("create.contact.subtitle"))
+        VStack(alignment: .leading, spacing: AppSpacing.medium) {
+            SectionHeader(title: container.t("create.contact.section"), subtitle: container.t("create.contact.subtitle"))
 
-                InputField(
-                    label: container.t("create.contact.name"),
-                    placeholder: container.t("create.contact.name"),
-                    text: $viewModel.contactName,
-                    textContentType: .name
-                )
+            InputField(
+                label: container.t("create.contact.name"),
+                placeholder: container.t("create.contact.name"),
+                text: $viewModel.contactName,
+                textContentType: .name
+            )
 
-                InputField(
-                    label: container.t("create.phone"),
-                    placeholder: container.t("create.phone"),
-                    text: $viewModel.contactPhone,
-                    error: localizedFieldError(.contactPhone),
-                    keyboardType: .phonePad,
-                    textContentType: .telephoneNumber,
-                    autocapitalization: .never,
-                    autocorrectionDisabled: true
-                )
+            InputField(
+                label: container.t("create.phone"),
+                placeholder: container.t("create.phone"),
+                text: $viewModel.contactPhone,
+                error: localizedFieldError(.contactPhone),
+                keyboardType: .phonePad,
+                textContentType: .telephoneNumber,
+                autocapitalization: .never,
+                autocorrectionDisabled: true
+            )
 
-                InputField(
-                    label: container.t("create.email"),
-                    placeholder: container.t("create.email"),
-                    text: $viewModel.contactEmail,
-                    error: localizedFieldError(.contactEmail),
-                    keyboardType: .emailAddress,
-                    textContentType: .emailAddress,
-                    autocapitalization: .never,
-                    autocorrectionDisabled: true
-                )
-            }
+            InputField(
+                label: container.t("create.email"),
+                placeholder: container.t("create.email"),
+                text: $viewModel.contactEmail,
+                error: localizedFieldError(.contactEmail),
+                keyboardType: .emailAddress,
+                textContentType: .emailAddress,
+                autocapitalization: .never,
+                autocorrectionDisabled: true
+            )
         }
     }
 
