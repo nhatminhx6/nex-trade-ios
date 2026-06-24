@@ -4,7 +4,16 @@ struct RequestsListView: View {
     @EnvironmentObject private var container: AppContainer
 
     var body: some View {
-        RequestsListContentView(viewModel: RequestsListViewModel(service: container.sourcingRequestService))
+        if container.currentUser == nil {
+            EmptyStateView(
+                title: container.t("requests.guest.title"),
+                description: container.t("requests.guest.body")
+            )
+            .padding(.horizontal, AppSpacing.large)
+            .background(AppColor.background)
+        } else {
+            RequestsListContentView(viewModel: RequestsListViewModel(service: container.sourcingRequestService))
+        }
     }
 }
 

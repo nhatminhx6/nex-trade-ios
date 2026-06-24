@@ -4,18 +4,7 @@ struct AppRootView: View {
     @EnvironmentObject private var container: AppContainer
 
     var body: some View {
-        Group {
-            switch container.authState {
-            case .loading:
-                ProgressView()
-                    .tint(AppColor.primaryAccent)
-            case .unauthenticated:
-                LoginView()
-            case .authenticated:
-                mainTabs
-            }
-        }
-        .task {
+        mainTabs.task {
             await container.restoreSession()
         }
     }
@@ -54,10 +43,5 @@ struct AppRootView: View {
         }
         .tint(AppColor.primaryAccent)
         .preferredColorScheme(container.preferredColorScheme)
-        .overlay(alignment: .topTrailing) {
-            AppQuickControls()
-                .padding(.top, 16)
-                .padding(.trailing, AppSpacing.large)
-        }
     }
 }

@@ -2,19 +2,11 @@ import XCTest
 
 final class NexTradeUITests: XCTestCase {
     @MainActor
-    func testBuyerCanSubmitARequestToLiveBackend() throws {
+    func testGuestIsPromptedToSignInOnlyWhenSubmittingARequest() throws {
         let app = XCUIApplication()
         app.launch()
 
-        let email = app.textFields["name@company.com"]
-        if email.waitForExistence(timeout: 3) {
-            email.tap()
-            email.typeText("buyer.demo@nextrade.local")
-            app.secureTextFields["Nhập mật khẩu"].tap()
-            app.secureTextFields["Nhập mật khẩu"].typeText("DemoPass123!")
-            app.buttons["Đăng nhập"].tap()
-        }
-
+        app.tabBars.buttons["Tìm nguồn"].tap()
         let createRequest = app.buttons["Gửi yêu cầu tìm nguồn"]
         XCTAssertTrue(createRequest.waitForExistence(timeout: 8))
         createRequest.tap()
@@ -25,7 +17,39 @@ final class NexTradeUITests: XCTestCase {
         product.typeText("Live backend UI test")
 
         app.buttons["Gửi yêu cầu"].tap()
+
+        let email = app.textFields["name@company.com"]
+        XCTAssertTrue(email.waitForExistence(timeout: 5))
+        email.tap()
+        email.typeText("buyer.demo@nextrade.local")
+        app.secureTextFields["Nhập mật khẩu"].tap()
+        app.secureTextFields["Nhập mật khẩu"].typeText("DemoPass123!")
+        app.buttons["Đăng nhập"].tap()
         XCTAssertTrue(app.alerts["Đã gửi yêu cầu"].waitForExistence(timeout: 10))
+    }
+
+    @MainActor
+    func testGuestCanBrowseWithoutSigningIn() throws {
+        let app = XCUIApplication()
+        app.launchArguments.append("-ui-testing-guest")
+        app.launch()
+
+        XCTAssertTrue(app.staticTexts["Yêu cầu đã duyệt"].waitForExistence(timeout: 8))
+        XCTAssertFalse(app.textFields["name@company.com"].exists)
+    }
+
+    @MainActor
+    func testGuestIsAskedToSignInFromSourceCTA() throws {
+        let app = XCUIApplication()
+        app.launchArguments.append("-ui-testing-guest")
+        app.launch()
+
+        app.tabBars.buttons["Tìm nguồn"].tap()
+        let createRequest = app.buttons["Gửi yêu cầu tìm nguồn"]
+        XCTAssertTrue(createRequest.waitForExistence(timeout: 5))
+        createRequest.tap()
+
+        XCTAssertTrue(app.textFields["name@company.com"].waitForExistence(timeout: 5))
     }
 
     @MainActor

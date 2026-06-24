@@ -2,6 +2,7 @@ import SwiftUI
 
 struct LoginView: View {
     @EnvironmentObject private var container: AppContainer
+    var onAuthenticated: (() -> Void)?
     @State private var email = ""
     @State private var password = ""
     @State private var errorMessageKey: String?
@@ -82,6 +83,7 @@ struct LoginView: View {
         defer { isLoading = false }
         do {
             try await container.login(email: email.trimmingCharacters(in: .whitespacesAndNewlines), password: password)
+            onAuthenticated?()
         } catch {
             errorMessageKey = "login.error.failed"
         }

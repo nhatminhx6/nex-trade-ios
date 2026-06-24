@@ -120,4 +120,10 @@ Ngày 2026-06-23: bỏ toolbar group vì iOS tự bọc thành pill lớn. Thay 
 
 Ngày 2026-06-23: trả language/theme về hai nút thao tác trực tiếp. Đưa controls ra header app để tránh automatic pill của iOS toolbar; mỗi nút có surface riêng, viền mảnh và corner radius 8pt, không outer capsule/shadow. Đã build, cài và kiểm tra trực quan trên iPhone 17 Pro simulator.
 
+Ngày 2026-06-23: bỏ authentication gate khi mở app. Guest có thể xem dashboard và các tab công khai; request history không gọi API khi chưa có session. Bấm Gửi yêu cầu trong form mới mở login sheet, sau login tự điền contact còn thiếu và tiếp tục submit request đang soạn. Cập nhật UI test guest browsing và test này đã pass (1/1); iOS build cũng pass.
+
+Ngày 2026-06-23: đưa login gate sớm hơn tại CTA “Gửi yêu cầu tìm nguồn” trong tab Tìm nguồn. Guest bấm CTA sẽ mở login; thành công thì tự điều hướng vào form. Thêm guest launch mode cho UI tests; test guest → CTA → login sheet đã pass (1/1).
+
+Ngày 2026-06-23: chuyển language/theme quick controls từ global app header sang riêng đầu tab Hồ sơ, tránh che/chiếm không gian của dashboard và các luồng sourcing. Build simulator thành công.
+
 Gap còn lại: cấu hình hiện trỏ `http://127.0.0.1:8090/api/` để chạy simulator local và mở ATS cho local development. Trước khi phát hành hoặc test máy thật, đổi `NexTradeAPIBaseURL` sang backend HTTPS/LAN phù hợp và siết lại ATS; cần thêm đăng ký tài khoản, refresh/expiry token và test UI trên simulator/device.

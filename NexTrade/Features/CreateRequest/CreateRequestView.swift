@@ -5,6 +5,7 @@ struct CreateRequestView: View {
     @EnvironmentObject private var container: AppContainer
     @StateObject private var viewModel: CreateRequestViewModel
     @State private var isShowingAdditional = false
+    @State private var isLoginPresented = false
 
     init(service: SourcingRequestServiceProtocol, currentUser: AppUser? = nil) {
         _viewModel = StateObject(wrappedValue: CreateRequestViewModel(service: service, currentUser: currentUser))
@@ -30,9 +31,12 @@ struct CreateRequestView: View {
                 }
 
                 PrimaryButton(title: container.t("create.submit"), isLoading: viewModel.isSubmitting) {
-                    Task {
-                        await viewModel.submit()
+                    guard container.currentUser != nil else {
+                        isLoginPresented = true
+                        return
                     }
+
+                    Task { await viewModel.submit() }
                 }
             }
             .padding(.horizontal, AppSpacing.large)
@@ -50,6 +54,21 @@ struct CreateRequestView: View {
             }
         } message: {
             Text(container.t("create.alert.message"))
+        }
+        .sheet(isPresented: $isLoginPresented) {
+            NavigationStack {
+                LoginView(onAuthenticated: submitAfterLogin)
+                    .toolbar {
+                        ToolbarItem(placement: .topBarLeading) {
+                            Button {
+                                isLoginPresented = false
+                            } label: {
+                                Image(systemName: "xmark")
+                            }
+                            .accessibilityLabel(container.t("login.dismiss"))
+                        }
+                    }
+            }
         }
     }
 
@@ -272,5 +291,12 @@ struct CreateRequestView: View {
         }
 
         return container.t(key)
+    }
+
+    private func submitAfterLogin() {
+        guard let user = container.currentUser else { return }
+        isLoginPresented = false
+        viewModel.prefillContact(from: user)
+        Task { await viewModel.submit() }
     }
 }

@@ -35,6 +35,12 @@ final class CreateRequestViewModel: ObservableObject {
         contactEmail = currentUser?.email ?? ""
     }
 
+    func prefillContact(from user: AppUser) {
+        if contactName.trimmed.isEmpty { contactName = user.name }
+        if contactPhone.trimmed.isEmpty { contactPhone = user.phone }
+        if contactEmail.trimmed.isEmpty { contactEmail = user.email }
+    }
+
     func submit() async {
         errorMessageKey = nil
         fieldErrorKeys = [:]

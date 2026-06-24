@@ -17,6 +17,7 @@ final class AppContainer: ObservableObject {
     @Published var selectedTab: AppTab = .home
     @Published private(set) var authState: AuthenticationState = .loading
     private let isUITesting: Bool
+    private let isUITestingGuest: Bool
 
     var preferredColorScheme: ColorScheme {
         isDarkMode ? .dark : .light
@@ -32,6 +33,7 @@ final class AppContainer: ObservableObject {
         self.approvedListingService = apiService
         self.authenticationService = apiService
         isUITesting = ProcessInfo.processInfo.arguments.contains("-ui-testing-authenticated")
+        isUITestingGuest = ProcessInfo.processInfo.arguments.contains("-ui-testing-guest")
 #if DEBUG
         if isUITesting {
             authState = .authenticated(AppUser(
@@ -42,6 +44,8 @@ final class AppContainer: ObservableObject {
                 companyName: "NexTrade Test Co.",
                 role: "buyer"
             ))
+        } else if isUITestingGuest {
+            authState = .unauthenticated
         }
 #endif
     }
@@ -60,6 +64,10 @@ final class AppContainer: ObservableObject {
 
     func restoreSession() async {
         guard !isUITesting else { return }
+        guard !isUITestingGuest else {
+            authState = .unauthenticated
+            return
+        }
         if let session = await authenticationService.restoreSession() {
             authState = .authenticated(session.user)
         } else {

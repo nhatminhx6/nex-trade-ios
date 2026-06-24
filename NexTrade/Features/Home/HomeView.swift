@@ -3,6 +3,8 @@ import SwiftUI
 struct HomeView: View {
     @EnvironmentObject private var container: AppContainer
     @StateObject private var viewModel = HomeDashboardViewModel()
+    @State private var isLoginPresented = false
+    @State private var isCreatingRequest = false
 
     private let categories = ["category.fruit", "category.vegetables", "category.dryFood", "category.beverage", "category.other"]
     private let values = [
@@ -28,11 +30,31 @@ struct HomeView: View {
         .background(AppColor.background)
         .navigationBarTitleDisplayMode(.inline)
         .refreshable {
+            guard container.currentUser != nil else { return }
             await viewModel.loadRequests(using: container.sourcingRequestService)
         }
         .onAppear {
             Task {
+                guard container.currentUser != nil else { return }
                 await viewModel.loadRequests(using: container.sourcingRequestService)
+            }
+        }
+        .navigationDestination(isPresented: $isCreatingRequest) {
+            CreateRequestView(service: container.sourcingRequestService, currentUser: container.currentUser)
+        }
+        .sheet(isPresented: $isLoginPresented) {
+            NavigationStack {
+                LoginView(onAuthenticated: openCreateRequestAfterLogin)
+                    .toolbar {
+                        ToolbarItem(placement: .topBarLeading) {
+                            Button {
+                                isLoginPresented = false
+                            } label: {
+                                Image(systemName: "xmark")
+                            }
+                            .accessibilityLabel(container.t("login.dismiss"))
+                        }
+                    }
             }
         }
     }
@@ -83,8 +105,12 @@ struct HomeView: View {
                     .lineSpacing(4)
             }
 
-            NavigationLink {
-                CreateRequestView(service: container.sourcingRequestService, currentUser: container.currentUser)
+            Button {
+                if container.currentUser == nil {
+                    isLoginPresented = true
+                } else {
+                    isCreatingRequest = true
+                }
             } label: {
                 HStack {
                     Text(container.t("home.cta"))
@@ -103,6 +129,7 @@ struct HomeView: View {
                         .stroke(AppColor.primaryAccent.opacity(0.28), lineWidth: 1)
                 }
             }
+            .buttonStyle(.plain)
         }
         .padding(18)
         .background(
@@ -118,6 +145,11 @@ struct HomeView: View {
                 .stroke(AppColor.glassStroke.opacity(0.86), lineWidth: 1)
         }
         .shadow(color: Color.black.opacity(0.14), radius: 28, x: 0, y: 16)
+    }
+
+    private func openCreateRequestAfterLogin() {
+        isLoginPresented = false
+        isCreatingRequest = true
     }
 
     private var workflowCard: some View {

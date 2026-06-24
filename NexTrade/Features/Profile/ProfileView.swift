@@ -12,6 +12,10 @@ struct ProfileView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: AppSpacing.large) {
+                HStack {
+                    Spacer()
+                    AppQuickControls()
+                }
                 accountCard
                 serviceSummaryCard
                 contactCard
