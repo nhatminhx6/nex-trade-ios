@@ -9,9 +9,11 @@ struct SourcingRequest: Identifiable, Hashable {
     let productName: String
     let category: String
     let quantity: String
+    let quantityUnit: String
     let targetMarket: String
     let tradeIntent: TradeIntent
     let neededAt: Date
+    let productDescription: String
     let budget: String
     let note: String
     let contactName: String
@@ -26,9 +28,11 @@ struct SourcingRequest: Identifiable, Hashable {
         productName: String,
         category: String,
         quantity: String,
+        quantityUnit: String = "kg",
         targetMarket: String,
         tradeIntent: TradeIntent = .buy,
         neededAt: Date = Date(),
+        productDescription: String = "",
         budget: String,
         note: String,
         contactName: String,
@@ -42,9 +46,11 @@ struct SourcingRequest: Identifiable, Hashable {
         self.productName = productName
         self.category = category
         self.quantity = quantity
+        self.quantityUnit = quantityUnit
         self.targetMarket = targetMarket
         self.tradeIntent = tradeIntent
         self.neededAt = neededAt
+        self.productDescription = productDescription
         self.budget = budget
         self.note = note
         self.contactName = contactName

@@ -6,9 +6,16 @@ struct CreateRequestView: View {
     @StateObject private var viewModel: CreateRequestViewModel
     @State private var isShowingAdditional = false
     @State private var isLoginPresented = false
+    private let onCompleted: () -> Void
 
-    init(service: SourcingRequestServiceProtocol, currentUser: AppUser? = nil) {
-        _viewModel = StateObject(wrappedValue: CreateRequestViewModel(service: service, currentUser: currentUser))
+    init(
+        service: SourcingRequestServiceProtocol,
+        currentUser: AppUser? = nil,
+        editingRequest: SourcingRequest? = nil,
+        onCompleted: @escaping () -> Void = {}
+    ) {
+        _viewModel = StateObject(wrappedValue: CreateRequestViewModel(service: service, currentUser: currentUser, editingRequest: editingRequest))
+        self.onCompleted = onCompleted
     }
 
     var body: some View {
@@ -30,7 +37,7 @@ struct CreateRequestView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
 
-                PrimaryButton(title: container.t("create.submit"), isLoading: viewModel.isSubmitting) {
+                PrimaryButton(title: container.t(viewModel.isEditing ? "edit.submit" : "create.submit"), isLoading: viewModel.isSubmitting) {
                     guard container.currentUser != nil else {
                         isLoginPresented = true
                         return
@@ -45,15 +52,19 @@ struct CreateRequestView: View {
             .background(.ultraThinMaterial)
         }
         .background(AppColor.background)
-        .navigationTitle(container.t("create.title"))
+        .navigationTitle(container.t(viewModel.isEditing ? "edit.title" : "create.title"))
         .navigationBarTitleDisplayMode(.inline)
-        .alert(container.t("create.alert.title"), isPresented: $viewModel.didSubmit) {
+        .alert(container.t(viewModel.isEditing ? "edit.alert.title" : "create.alert.title"), isPresented: $viewModel.didSubmit) {
             Button(container.t("create.alert.ok")) {
-                container.selectedTab = .home
+                if viewModel.isEditing {
+                    onCompleted()
+                } else {
+                    container.selectedTab = .home
+                }
                 dismiss()
             }
         } message: {
-            Text(container.t("create.alert.message"))
+            Text(container.t(viewModel.isEditing ? "edit.alert.message" : "create.alert.message"))
         }
         .sheet(isPresented: $isLoginPresented) {
             NavigationStack {
@@ -88,7 +99,7 @@ struct CreateRequestView: View {
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 5) {
-            Text(container.t("create.top.title"))
+            Text(container.t(viewModel.isEditing ? "edit.top.title" : "create.top.title"))
                 .font(.title2.weight(.bold))
                 .foregroundStyle(AppColor.primaryText)
 
@@ -152,6 +163,12 @@ struct CreateRequestView: View {
                 error: localizedFieldError(.productName)
             )
 
+            TextAreaField(
+                label: container.t("create.product.description"),
+                placeholder: container.t("create.product.description.placeholder"),
+                text: $viewModel.productDescription
+            )
+
             categoryPicker
 
             InputField(
@@ -159,6 +176,8 @@ struct CreateRequestView: View {
                 placeholder: container.t("create.quantity.placeholder"),
                 text: $viewModel.quantity
             )
+
+            quantityUnitPicker
 
             InputField(
                 label: container.t("create.market"),
@@ -211,6 +230,46 @@ struct CreateRequestView: View {
                 Text(error)
                     .font(.caption)
                     .foregroundStyle(AppColor.error)
+            }
+        }
+    }
+
+    private var quantityUnitPicker: some View {
+        VStack(alignment: .leading, spacing: AppSpacing.xsmall) {
+            Text(container.t("create.quantity.unit"))
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(AppColor.secondaryText)
+
+            Menu {
+                ForEach(viewModel.quantityUnits, id: \.self) { unit in
+                    Button {
+                        viewModel.quantityUnit = unit
+                    } label: {
+                        if viewModel.quantityUnit == unit {
+                            Label(container.t("quantity.unit.\(unit)"), systemImage: "checkmark")
+                        } else {
+                            Text(container.t("quantity.unit.\(unit)"))
+                        }
+                    }
+                }
+            } label: {
+                HStack {
+                    Text(container.t("quantity.unit.\(viewModel.quantityUnit)"))
+                        .font(.subheadline)
+                        .foregroundStyle(AppColor.primaryText)
+                    Spacer()
+                    Image(systemName: "chevron.down")
+                        .font(.caption.weight(.bold))
+                        .foregroundStyle(AppColor.secondaryText)
+                }
+                .padding(.horizontal, AppSpacing.medium)
+                .frame(minHeight: 44)
+                .background(AppColor.backgroundElevated)
+                .clipShape(RoundedRectangle(cornerRadius: AppRadius.small, style: .continuous))
+                .overlay {
+                    RoundedRectangle(cornerRadius: AppRadius.small, style: .continuous)
+                        .stroke(AppColor.border, lineWidth: 1)
+                }
             }
         }
     }

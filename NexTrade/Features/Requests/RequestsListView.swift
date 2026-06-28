@@ -217,8 +217,8 @@ private struct RequestRowCard: View {
                     .padding(.vertical, 10)
 
                 HStack(spacing: 8) {
-                    Image(systemName: "clock")
-                    Text(request.createdAt.formatted(date: .abbreviated, time: .shortened))
+                    Image(systemName: request.createdAt == .distantPast ? "calendar" : "clock")
+                    Text(requestDateText)
                     Spacer()
                     Image(systemName: "chevron.right")
                         .font(.caption.weight(.bold))
@@ -227,6 +227,14 @@ private struct RequestRowCard: View {
                 .foregroundStyle(AppColor.secondaryText)
             }
         }
+    }
+
+    private var requestDateText: String {
+        if request.createdAt == .distantPast {
+            return "\(container.t("discover.needed.prefix")) \(request.neededAt.formatted(date: .abbreviated, time: .omitted))"
+        }
+
+        return request.createdAt.formatted(date: .abbreviated, time: .shortened)
     }
 }
 

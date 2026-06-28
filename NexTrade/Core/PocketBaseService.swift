@@ -41,53 +41,32 @@ actor PocketBaseService: SourcingRequestServiceProtocol, AuthenticationServicePr
         guard let user = authSession?.user else { throw APIError.unauthenticated }
         try await updateProfile(for: user, with: sourcingRequest)
 
-        struct CreatePayload: Encodable {
-            let title: String
-            let productName: String
-            let category: String
-            let quantity: String
-            let targetCountry: String
-            let tradeIntent: String
-            let neededAt: String
-            let budgetRange: String
-            let description: String
-            let contactName: String
-            let contactPhone: String
-            let contactEmail: String
-            let status: String
-            let createdBy: String
-
-            enum CodingKeys: String, CodingKey {
-                case title, category, quantity, status
-                case productName = "product_name"
-                case targetCountry = "target_country"
-                case tradeIntent = "trade_intent"
-                case neededAt = "needed_at"
-                case budgetRange = "budget_range"
-                case description
-                case contactName = "contact_name"
-                case contactPhone = "contact_phone"
-                case contactEmail = "contact_email"
-                case createdBy = "created_by"
-            }
-        }
-        let payload = CreatePayload(
-            title: sourcingRequest.productName,
-            productName: sourcingRequest.productName,
-            category: Self.apiCategory(for: sourcingRequest.category),
-            quantity: sourcingRequest.quantity,
-            targetCountry: sourcingRequest.targetMarket,
-            tradeIntent: sourcingRequest.tradeIntent.rawValue,
+        let payload = CreateRequestPayload(
+            request: sourcingRequest,
+            apiCategory: Self.apiCategory(for: sourcingRequest.category),
             neededAt: Self.tradeDateFormatter.string(from: sourcingRequest.neededAt),
-            budgetRange: sourcingRequest.budget,
-            description: sourcingRequest.note,
-            contactName: sourcingRequest.contactName,
-            contactPhone: sourcingRequest.contactPhone,
-            contactEmail: sourcingRequest.contactEmail,
             status: "submitted",
             createdBy: user.id
         )
         try await perform(path: "collections/sourcing_requests/records", method: "POST", body: payload)
+    }
+
+    func updateRequest(_ sourcingRequest: SourcingRequest) async throws {
+        guard let user = authSession?.user else { throw APIError.unauthenticated }
+        try await updateProfile(for: user, with: sourcingRequest)
+
+        let payload = UpdateRequestPayload(
+            request: sourcingRequest,
+            apiCategory: Self.apiCategory(for: sourcingRequest.category),
+            neededAt: Self.tradeDateFormatter.string(from: sourcingRequest.neededAt)
+        )
+        try await perform(path: "collections/sourcing_requests/records/\(sourcingRequest.id)", method: "PATCH", body: payload)
+        try? await removeApprovedListings(for: sourcingRequest.id)
+    }
+
+    func deleteRequest(id: String) async throws {
+        guard authSession?.user != nil else { throw APIError.unauthenticated }
+        try await perform(path: "collections/sourcing_requests/records/\(id)", method: "DELETE", body: Optional<EmptyRequestBody>.none)
     }
 
     func fetchRequests() async throws -> [SourcingRequest] {
@@ -106,6 +85,16 @@ actor PocketBaseService: SourcingRequestServiceProtocol, AuthenticationServicePr
         struct ListResponse: Decodable { let items: [ListingRecord] }
         let response: ListResponse = try await request(path: "collections/approved_listings/records")
         return response.items.map(\.approvedListing)
+    }
+
+    private func removeApprovedListings(for requestID: String) async throws {
+        struct ListResponse: Decodable { let items: [ListingRecord] }
+        let filter = "request='\(requestID)'".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        let response: ListResponse = try await request(path: "collections/approved_listings/records?filter=\(filter)&perPage=50")
+
+        for listing in response.items {
+            try await perform(path: "collections/approved_listings/records/\(listing.id)", method: "DELETE", body: Optional<EmptyRequestBody>.none)
+        }
     }
 
     private func updateProfile(for user: AppUser, with sourcingRequest: SourcingRequest) async throws {
@@ -168,6 +157,111 @@ actor PocketBaseService: SourcingRequestServiceProtocol, AuthenticationServicePr
 
 private struct EmptyRequestBody: Encodable {}
 
+private struct CreateRequestPayload: Encodable {
+    let title: String
+    let productName: String
+    let category: String
+    let quantity: String
+    let quantityUnit: String
+    let targetCountry: String
+    let tradeIntent: String
+    let neededAt: String
+    let productDescription: String
+    let budgetRange: String
+    let description: String
+    let contactName: String
+    let contactPhone: String
+    let contactEmail: String
+    let status: String
+    let createdBy: String
+
+    init(request: SourcingRequest, apiCategory: String, neededAt: String, status: String, createdBy: String) {
+        title = request.productName
+        productName = request.productName
+        category = apiCategory
+        quantity = request.quantity
+        quantityUnit = request.quantityUnit
+        targetCountry = request.targetMarket
+        tradeIntent = request.tradeIntent.rawValue
+        self.neededAt = neededAt
+        productDescription = request.productDescription
+        budgetRange = request.budget
+        description = request.note
+        contactName = request.contactName
+        contactPhone = request.contactPhone
+        contactEmail = request.contactEmail
+        self.status = status
+        self.createdBy = createdBy
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case title, category, quantity, status
+        case quantityUnit = "quantity_unit"
+        case productName = "product_name"
+        case targetCountry = "target_country"
+        case tradeIntent = "trade_intent"
+        case neededAt = "needed_at"
+        case productDescription = "product_description"
+        case budgetRange = "budget_range"
+        case description
+        case contactName = "contact_name"
+        case contactPhone = "contact_phone"
+        case contactEmail = "contact_email"
+        case createdBy = "created_by"
+    }
+}
+
+private struct UpdateRequestPayload: Encodable {
+    let title: String
+    let productName: String
+    let category: String
+    let quantity: String
+    let quantityUnit: String
+    let targetCountry: String
+    let tradeIntent: String
+    let neededAt: String
+    let productDescription: String
+    let budgetRange: String
+    let description: String
+    let contactName: String
+    let contactPhone: String
+    let contactEmail: String
+    let status: String
+
+    init(request: SourcingRequest, apiCategory: String, neededAt: String) {
+        title = request.productName
+        productName = request.productName
+        category = apiCategory
+        quantity = request.quantity
+        quantityUnit = request.quantityUnit
+        targetCountry = request.targetMarket
+        tradeIntent = request.tradeIntent.rawValue
+        self.neededAt = neededAt
+        productDescription = request.productDescription
+        budgetRange = request.budget
+        description = request.note
+        contactName = request.contactName
+        contactPhone = request.contactPhone
+        contactEmail = request.contactEmail
+        status = "submitted"
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case title, category, quantity, status
+        case quantityUnit = "quantity_unit"
+        case productName = "product_name"
+        case targetCountry = "target_country"
+        case tradeIntent = "trade_intent"
+        case neededAt = "needed_at"
+        case productDescription = "product_description"
+        case budgetRange = "budget_range"
+        case description
+        case contactName = "contact_name"
+        case contactPhone = "contact_phone"
+        case contactEmail = "contact_email"
+    }
+}
+
 private enum APIConfiguration {
     static var baseURL: URL {
         let configuredValue = Bundle.main.object(forInfoDictionaryKey: "NexTradeAPIBaseURL") as? String
@@ -229,9 +323,11 @@ private struct RequestRecord: Decodable {
     let productName: String
     let category: String
     let quantity: String?
+    let quantityUnit: String?
     let targetCountry: String?
     let tradeIntent: String?
     let neededAt: String?
+    let productDescription: String?
     let budgetRange: String?
     let description: String?
     let contactName: String?
@@ -242,6 +338,7 @@ private struct RequestRecord: Decodable {
 
     enum CodingKeys: String, CodingKey {
         case id, category, quantity, description, status, created
+        case quantityUnit = "quantity_unit"
         case contactName = "contact_name"
         case contactPhone = "contact_phone"
         case contactEmail = "contact_email"
@@ -249,6 +346,7 @@ private struct RequestRecord: Decodable {
         case targetCountry = "target_country"
         case tradeIntent = "trade_intent"
         case neededAt = "needed_at"
+        case productDescription = "product_description"
         case budgetRange = "budget_range"
     }
 
@@ -258,9 +356,11 @@ private struct RequestRecord: Decodable {
             productName: productName,
             category: Self.appCategory(for: category),
             quantity: quantity ?? "",
+            quantityUnit: quantityUnit ?? "kg",
             targetMarket: targetCountry ?? "",
             tradeIntent: TradeIntent(rawValue: tradeIntent ?? "buy") ?? .buy,
             neededAt: Self.tradeDate(from: neededAt) ?? Date(),
+            productDescription: productDescription ?? "",
             budget: budgetRange ?? "",
             note: description ?? "",
             contactName: contactName ?? contact?.name ?? "",
@@ -292,32 +392,42 @@ private struct ListingRecord: Decodable {
     let productName: String
     let category: String?
     let quantity: String?
+    let quantityUnit: String?
     let targetCountry: String?
     let tradeIntent: String?
     let neededAt: String?
+    let publishedAt: String?
+    let productDescription: String?
     let budgetRange: String?
     let description: String?
     let created: Date?
 
     enum CodingKeys: String, CodingKey {
         case id, title, category, quantity, description, created
+        case quantityUnit = "quantity_unit"
         case productName = "product_name"
         case targetCountry = "target_country"
         case tradeIntent = "trade_intent"
         case neededAt = "needed_at"
+        case publishedAt = "published_at"
+        case productDescription = "product_description"
         case budgetRange = "budget_range"
     }
 
     var approvedListing: ApprovedListing {
-        ApprovedListing(id: id, title: title, productName: productName, category: category ?? "other", quantity: quantity ?? "", targetMarket: targetCountry ?? "", tradeIntent: TradeIntent(rawValue: tradeIntent ?? "buy") ?? .buy, neededAt: RequestRecord.tradeDate(from: neededAt), budget: budgetRange ?? "", description: description ?? "", createdAt: created ?? .distantPast)
+        ApprovedListing(id: id, title: title, productName: productName, category: category ?? "other", quantity: quantity ?? "", quantityUnit: quantityUnit ?? "kg", targetMarket: targetCountry ?? "", tradeIntent: TradeIntent(rawValue: tradeIntent ?? "buy") ?? .buy, neededAt: RequestRecord.tradeDate(from: neededAt), publishedAt: RequestRecord.tradeDate(from: publishedAt), productDescription: productDescription ?? "", budget: budgetRange ?? "", description: description ?? "", createdAt: created ?? .distantPast)
     }
 }
 
 private extension SourcingRequestStatus {
     init(apiStatus: String?) {
         switch apiStatus {
+        case "submitted":
+            self = .new
         case "reviewing", "sourcing": self = .reviewing
         case "quoted": self = .quoted
+        case "approved": self = .approved
+        case "rejected": self = .rejected
         case "completed": self = .completed
         case "cancelled": self = .cancelled
         default: self = .new

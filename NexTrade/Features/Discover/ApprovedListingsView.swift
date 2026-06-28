@@ -24,8 +24,10 @@ struct ApprovedListingsView: View {
                         description: container.t("discover.empty.intent.body")
                     )
                 } else {
-                    ForEach(filteredListings) { listing in
-                        ListingCard(listing: listing)
+                    LazyVStack(spacing: AppSpacing.small) {
+                        ForEach(filteredListings) { listing in
+                            ListingCard(listing: listing)
+                        }
                     }
                 }
             }
@@ -36,6 +38,13 @@ struct ApprovedListingsView: View {
         .navigationBarTitleDisplayMode(.inline)
         .refreshable { await viewModel.load() }
         .task { await viewModel.load() }
+        .onAppear {
+            Task { await viewModel.load() }
+        }
+        .onChange(of: container.selectedTab) { _, selectedTab in
+            guard selectedTab == .home else { return }
+            Task { await viewModel.load() }
+        }
     }
 
     private var feedHeader: some View {
@@ -144,53 +153,101 @@ private struct ListingCard: View {
 
     var body: some View {
         AppListItem {
-            VStack(alignment: .leading, spacing: 7) {
+            VStack(alignment: .leading, spacing: AppSpacing.small) {
                 HStack(alignment: .top, spacing: AppSpacing.medium) {
-                    Text(listing.productName)
-                        .font(.headline.weight(.semibold))
-                        .foregroundStyle(AppColor.primaryText)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(listing.productName.capitalizingFirstCharacter())
+                            .font(.body.weight(.semibold))
+                            .foregroundStyle(AppColor.primaryText)
+                            .lineLimit(1)
+
+                        HStack(spacing: AppSpacing.small) {
+                            if !listing.targetMarket.isEmpty {
+                                Label(listing.targetMarket.capitalizingFirstCharacter(), systemImage: "globe.asia.australia.fill")
+                            }
+
+                            if !listing.targetMarket.isEmpty && !listing.quantity.isEmpty {
+                                Rectangle()
+                                    .fill(AppColor.border)
+                                    .frame(width: 1, height: 14)
+                            }
+
+                            if !listing.quantity.isEmpty {
+                                Label("\(listing.quantity) \(container.t("quantity.unit.\(listing.quantityUnit)"))", systemImage: "shippingbox.fill")
+                            }
+                        }
+                        .font(.subheadline)
+                        .foregroundStyle(AppColor.secondaryText)
                         .lineLimit(1)
+                    }
 
                     Spacer(minLength: AppSpacing.small)
 
-                    Text(container.t("discover.approved"))
+                    Text(container.localizedCategory(listing.category).capitalizingFirstCharacter())
                         .font(.caption.weight(.semibold))
-                        .foregroundStyle(AppColor.success)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 5)
-                        .background(AppColor.success.opacity(0.10))
-                        .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
+                        .foregroundStyle(AppColor.secondaryText)
+                        .lineLimit(1)
+                        .padding(.top, 2)
                 }
 
-                Text(primaryValue)
-                    .font(.title3.weight(.semibold))
-                    .foregroundStyle(AppColor.primaryText)
-                    .lineLimit(1)
-
-                HStack(alignment: .firstTextBaseline, spacing: AppSpacing.small) {
-                    Text(secondaryValue)
-                        .lineLimit(1)
-                    Spacer(minLength: AppSpacing.small)
-                    Text(tradeLine)
-                        .lineLimit(1)
+                if !listing.productDescription.isEmpty {
+                    Text(listing.productDescription.capitalizingFirstCharacter())
+                        .font(.subheadline)
+                        .foregroundStyle(AppColor.secondaryText)
+                        .lineLimit(2)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
-                .font(.subheadline)
-                .foregroundStyle(AppColor.secondaryText)
+
+                if publishedDate != nil || listing.neededAt != nil {
+                    Hairline()
+
+                    HStack(spacing: AppSpacing.small) {
+                        if let publishedDate {
+                            dateLabel(
+                                systemName: "clock",
+                                title: "\(container.t("discover.published.prefix")) \(formattedDate(publishedDate, includesTime: true))"
+                            )
+                        }
+
+                        Spacer(minLength: 0)
+
+                        if let neededAt = listing.neededAt {
+                            dateLabel(
+                                systemName: "calendar",
+                                title: "\(container.t("discover.needed.prefix")) \(formattedDate(neededAt, includesTime: false))"
+                            )
+                        }
+                    }
+                }
             }
         }
     }
 
-    private var primaryValue: String {
-        listing.quantity.isEmpty ? container.localizedCategory(listing.category) : listing.quantity
+    private var publishedDate: Date? {
+        if let publishedAt = listing.publishedAt { return publishedAt }
+        return listing.createdAt == .distantPast ? nil : listing.createdAt
     }
 
-    private var secondaryValue: String {
-        listing.targetMarket.isEmpty ? container.localizedCategory(listing.category) : listing.targetMarket
+    private func dateLabel(systemName: String, title: String) -> some View {
+        Label(title, systemImage: systemName)
+            .font(.caption2.weight(.semibold))
+            .foregroundStyle(AppColor.secondaryText)
+            .lineLimit(1)
+            .fixedSize(horizontal: true, vertical: false)
     }
 
-    private var tradeLine: String {
-        let tradeTime = listing.neededAt?.formatted(date: .abbreviated, time: .omitted) ?? container.t("discover.not.set")
-        return "\(container.t("discover.trade.prefix")): \(tradeTime)"
+    private func formattedDate(_ date: Date, includesTime: Bool) -> String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = includesTime ? "HH:mm · dd/MM" : "dd/MM/yy"
+        return formatter.string(from: date)
+    }
+}
+
+private extension String {
+    func capitalizingFirstCharacter() -> String {
+        guard let first else { return self }
+        return first.uppercased() + dropFirst()
     }
 }
 
@@ -211,7 +268,7 @@ private enum DashboardDateFilter: CaseIterable, Identifiable {
 
     func includes(_ listing: ApprovedListing) -> Bool {
         guard self != .all else { return true }
-        let date: Date? = listing.createdAt == .distantPast ? listing.neededAt : listing.createdAt
+        let date: Date? = listing.publishedAt ?? (listing.createdAt == .distantPast ? listing.neededAt : listing.createdAt)
         guard let date else { return true }
 
         let calendar = Calendar.current

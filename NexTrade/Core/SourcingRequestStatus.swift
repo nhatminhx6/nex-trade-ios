@@ -4,6 +4,8 @@ enum SourcingRequestStatus: String, CaseIterable, Hashable {
     case new
     case reviewing
     case quoted
+    case approved
+    case rejected
     case completed
     case cancelled
 
@@ -19,6 +21,10 @@ enum SourcingRequestStatus: String, CaseIterable, Hashable {
             AppText.values["status.reviewing.title"]?[language] ?? "Đang kiểm tra"
         case .quoted:
             AppText.values["status.quoted.title"]?[language] ?? "Đã phản hồi giá"
+        case .approved:
+            AppText.values["status.approved.title"]?[language] ?? "Đã duyệt"
+        case .rejected:
+            AppText.values["status.rejected.title"]?[language] ?? "Từ chối"
         case .completed:
             AppText.values["status.completed.title"]?[language] ?? "Hoàn tất"
         case .cancelled:
@@ -38,6 +44,10 @@ enum SourcingRequestStatus: String, CaseIterable, Hashable {
             AppText.values["status.reviewing.badge"]?[language] ?? "Đang xử lý"
         case .quoted:
             AppText.values["status.quoted.badge"]?[language] ?? "Có báo giá"
+        case .approved:
+            AppText.values["status.approved.badge"]?[language] ?? "Đã duyệt"
+        case .rejected:
+            AppText.values["status.rejected.badge"]?[language] ?? "Từ chối"
         case .completed:
             AppText.values["status.completed.badge"]?[language] ?? "Hoàn tất"
         case .cancelled:
@@ -53,6 +63,10 @@ enum SourcingRequestStatus: String, CaseIterable, Hashable {
             AppColor.processing
         case .quoted:
             AppColor.accentDark
+        case .approved:
+            AppColor.success
+        case .rejected:
+            AppColor.error
         case .completed:
             AppColor.success
         case .cancelled:

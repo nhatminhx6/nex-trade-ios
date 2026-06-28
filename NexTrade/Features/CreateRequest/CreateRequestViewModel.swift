@@ -5,9 +5,11 @@ final class CreateRequestViewModel: ObservableObject {
     @Published var productName = ""
     @Published var category = "category.fruit"
     @Published var quantity = ""
+    @Published var quantityUnit = "kg"
     @Published var targetMarket = ""
     @Published var tradeIntent: TradeIntent = .buy
     @Published var neededAt = Date()
+    @Published var productDescription = ""
     @Published var budget = ""
     @Published var note = ""
     @Published var contactName = ""
@@ -19,7 +21,13 @@ final class CreateRequestViewModel: ObservableObject {
     @Published var didSubmit = false
 
     let categories = ["category.fruit", "category.vegetables", "category.dryFood", "category.beverage", "category.other"]
+    let quantityUnits = ["kg", "ton", "container", "carton", "piece"]
+    let editingRequest: SourcingRequest?
     private let service: SourcingRequestServiceProtocol
+
+    var isEditing: Bool {
+        editingRequest != nil
+    }
 
     enum Field: Hashable {
         case productName
@@ -28,11 +36,29 @@ final class CreateRequestViewModel: ObservableObject {
         case contactEmail
     }
 
-    init(service: SourcingRequestServiceProtocol, currentUser: AppUser? = nil) {
+    init(service: SourcingRequestServiceProtocol, currentUser: AppUser? = nil, editingRequest: SourcingRequest? = nil) {
         self.service = service
-        contactName = currentUser?.name ?? ""
-        contactPhone = currentUser?.phone ?? ""
-        contactEmail = currentUser?.email ?? ""
+        self.editingRequest = editingRequest
+
+        if let editingRequest {
+            productName = editingRequest.productName
+            category = editingRequest.category
+            quantity = editingRequest.quantity
+            quantityUnit = editingRequest.quantityUnit
+            targetMarket = editingRequest.targetMarket
+            tradeIntent = editingRequest.tradeIntent
+            neededAt = editingRequest.neededAt
+            productDescription = editingRequest.productDescription
+            budget = editingRequest.budget
+            note = editingRequest.note
+            contactName = editingRequest.contactName
+            contactPhone = editingRequest.contactPhone
+            contactEmail = editingRequest.contactEmail
+        } else {
+            contactName = currentUser?.name ?? ""
+            contactPhone = currentUser?.phone ?? ""
+            contactEmail = currentUser?.email ?? ""
+        }
     }
 
     func prefillContact(from user: AppUser) {
@@ -53,21 +79,31 @@ final class CreateRequestViewModel: ObservableObject {
         defer { isSubmitting = false }
 
         let request = SourcingRequest(
+            id: editingRequest?.id ?? UUID().uuidString,
             productName: productName.trimmed,
             category: category.trimmed,
             quantity: quantity.trimmed,
+            quantityUnit: quantityUnit,
             targetMarket: targetMarket.trimmed,
             tradeIntent: tradeIntent,
             neededAt: Calendar.current.startOfDay(for: neededAt),
+            productDescription: productDescription.trimmed,
             budget: budget.trimmed,
             note: note.trimmed,
             contactName: contactName.trimmed,
             contactPhone: contactPhone.trimmed,
-            contactEmail: contactEmail.trimmed
+            contactEmail: contactEmail.trimmed,
+            status: isEditing ? .new : (editingRequest?.status ?? .new),
+            adminNote: editingRequest?.adminNote,
+            createdAt: editingRequest?.createdAt ?? Date()
         )
 
         do {
-            try await service.submitRequest(request)
+            if isEditing {
+                try await service.updateRequest(request)
+            } else {
+                try await service.submitRequest(request)
+            }
             didSubmit = true
         } catch let error as APIError {
             errorMessageKey = error.messageKey

@@ -93,12 +93,14 @@ final class AppContainer: ObservableObject {
 
     private func categoryKey(for value: String) -> String {
         switch value {
-        case "Trái cây", "Fruit":
+        case "Trái cây", "Fruit", "fruit":
             "category.fruit"
-        case "Rau củ", "Vegetables":
+        case "Rau củ", "Vegetables", "vegetable":
             "category.vegetables"
         case "Thực phẩm khô", "Dry food":
             "category.dryFood"
+        case "other":
+            "category.other"
         case "Đồ uống", "Beverages":
             "category.beverage"
         case "Hàng khác", "Other goods":

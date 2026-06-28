@@ -6,9 +6,12 @@ struct ApprovedListing: Identifiable, Hashable {
     let productName: String
     let category: String
     let quantity: String
+    let quantityUnit: String
     let targetMarket: String
     let tradeIntent: TradeIntent
     let neededAt: Date?
+    let publishedAt: Date?
+    let productDescription: String
     let budget: String
     let description: String
     let createdAt: Date
