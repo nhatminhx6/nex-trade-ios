@@ -126,38 +126,6 @@ Ngày 2026-06-23: đưa login gate sớm hơn tại CTA “Gửi yêu cầu tìm
 
 Ngày 2026-06-23: chuyển language/theme quick controls từ global app header sang riêng đầu tab Hồ sơ, tránh che/chiếm không gian của dashboard và các luồng sourcing. Build simulator thành công.
 
-Ngày 2026-06-24: làm lại approved listing item theo hierarchy sourcing: intent/category, product, approved indicator không pill, metric quantity/market rõ ràng và date footer. Thêm `published_at` cho approved listings; dashboard admin ghi timestamp khi approve, mobile hiển thị ngày/giờ đăng cùng ngày cần giao dịch. Thêm backend migration `202606240001_listing_published_at.js`, cập nhật schema và mobile decode. Build, cài và kiểm tra trực quan trên simulator thành công. Cần restart PocketBase để apply migration; listing cũ không có timestamp sẽ chưa hiện footer date.
-
-Ngày 2026-06-24: xác minh live backend sau restart: tạo tạm một sourcing request qua API, nhận lại `trade_intent: buy` và `needed_at: 2026-06-30 00:00:00`, sau đó xoá record test. Các approved listing cũ có field rỗng vì được tạo trước migration; listing mới sẽ nhận date khi approved.
-
-Ngày 2026-06-24: giữ compact listing row hiện tại và thêm date footer cho record có metadata: thời gian đăng (`published_at`) và ngày cần giao dịch (`needed_at`). Dùng format ngắn phù hợp mobile `Đăng HH:mm · dd/MM` / `Cần dd/MM/yy`; đã build, cài fresh và xác nhận record mới hiển thị đủ hai mốc trên simulator.
-
-Ngày 2026-06-24: tách category và thị trường trên approved listing row thành hai dòng riêng, bỏ inline dot separator để thông tin dễ quét hơn. Build simulator thành công.
-
-Ngày 2026-06-24: thêm field riêng `product_description` xuyên suốt create request: TextArea trong phần Thông tin sản phẩm, Swift model/view model, payload iOS, PocketBase request/listing schema và admin approve copy. Request detail đọc/hiển thị field mới; admin table ưu tiên product description. Thêm migration `202606240002_product_description.js`, cập nhật API/schema docs. iOS build simulator thành công; cần restart PocketBase để apply migration.
-
-Ngày 2026-06-24: chuẩn hoá text display cho approved listing row: viết hoa ký tự đầu của tên sản phẩm/thị trường và map raw category codes (`fruit`, `vegetable`, `other`) qua localization thay vì hiển thị lowercase API value. Build simulator thành công.
-
-Ngày 2026-06-24: hiển thị `product_description` trên approved listing row khi có dữ liệu, đặt trước date footer và giới hạn hai dòng. Dùng text field plain-text ở PocketBase cho field này. Build simulator thành công.
-
-Ngày 2026-06-24: bỏ quantity column tách rời ở approved listing row. Thị trường và số lượng giờ nằm cùng metadata line với label rõ `Số lượng: …`, tránh số không có ngữ cảnh. Build simulator thành công.
-
-Ngày 2026-06-24: chuyển category của approved listing sang góc phải cùng hàng title; left side giữ product title và market/quantity metadata. Build simulator thành công.
-
-Ngày 2026-06-24: thay raw metadata line `Market · Quantity: value` bằng compact detail strip có globe/market và shipping box/quantity, phân tách bằng hairline dọc. Build simulator thành công.
-
-Ngày 2026-06-24: thêm `quantity_unit` xuyên suốt sourcing request và approved listing. Form iOS có selector đơn vị (kg, tấn, container, thùng, cái); payload/API/mobile model, admin approve copy và schema docs đều gửi/đọc field thật. Dashboard mobile giờ hiển thị số lượng kèm đơn vị (ví dụ `1000 kg`) và category được canh sát góc phải phía trên của row. Thêm migration backend `202606240003_quantity_unit.js`; iOS simulator build thành công. Cần restart PocketBase một lần để apply migration trước khi tạo post mới có đơn vị.
-
-Ngày 2026-06-25: thêm API và UI để user sửa/xoá bài post của chính mình. `SourcingRequestServiceProtocol`, mock service và `PocketBaseService` nay có `updateRequest` bằng `PATCH /sourcing_requests/{id}` và `deleteRequest` bằng `DELETE /sourcing_requests/{id}`; form tạo yêu cầu được reuse thành edit mode với dữ liệu prefill và nút “Lưu thay đổi”. Màn chi tiết yêu cầu có menu Sửa bài post / Xoá bài post, xoá có confirm alert và sửa xong tự refresh detail. Cập nhật localization Việt/Anh và docs API/schema backend để mô tả endpoint update/delete. Build iOS simulator thành công. Không cần migration mới vì rule hiện tại đã cho request owner update/delete record của mình.
-
-Ngày 2026-06-25: chỉnh UX sửa/xoá bài post trên màn chi tiết theo hướng rõ hơn: bỏ menu popup 3 chấm, đưa nút “Sửa” trực tiếp lên góc phải navigation bar và đặt nút “Xoá bài post” full-width màu đỏ ở cuối màn. Build iOS simulator thành công.
-
-Ngày 2026-06-25: kiểm tra lý do tab Yêu cầu vẫn hiện 6 bài sau khi xoá dữ liệu hôm trước. API buyer demo vẫn còn 6 record trong `sourcing_requests`, toàn bộ đang có status raw `approved`; app cũ chưa map `approved/rejected` nên hiển thị sai thành “Mới”, và các record cũ thiếu system field `created` nên fallback ra `1 Jan 07:06`. Đã thêm trạng thái `approved/rejected` vào `SourcingRequestStatus`, map từ API đúng sang “Đã duyệt/Từ chối”, và request row fallback sang ngày cần giao dịch khi thiếu ngày tạo. Build iOS simulator thành công. Chưa xoá DB thật trong lượt này.
-
-Ngày 2026-06-25: cập nhật flow moderation khi user sửa bài đã duyệt. Mobile `PATCH` request giờ luôn đưa `status` về `submitted`; thông báo sửa bài nói rõ bài chờ NexTrade duyệt lại. Backend thêm migration `202606250001_reapproval_visibility.js`: public `approved_listings` chỉ list/view được khi source request còn `status = approved`, admin vẫn thấy toàn bộ. Admin review page khi approve lại sẽ xoá listing cũ của request trước khi publish bản mới; reject cũng xoá listing cũ để không còn bài stale. Cập nhật API/schema docs. iOS simulator build thành công. Cần restart PocketBase để apply migration rule mới.
-
-Ngày 2026-06-25: sửa bug dashboard mobile vẫn show bài vừa edit dù request đã quay lại `submitted`. Nguyên nhân là `ApprovedListingsView` giữ danh sách đã load trong memory và `.task` không reload khi quay lại tab; đồng thời API client chưa filter cứng theo trạng thái request gốc. `fetchApprovedListings()` giờ query `approved_listings` với `filter=request.status='approved'`; dashboard reload lại khi view xuất hiện và khi selected tab chuyển về Home. Build iOS simulator thành công.
-
-Ngày 2026-06-25: sửa tiếp bug approve lại xong dashboard không show. PocketBase không trả kết quả cho filter relation `request.status='approved'` trên `approved_listings` như kỳ vọng, dù request gốc đã approved. Revert mobile `fetchApprovedListings()` về list public bình thường; khi buyer edit request, mobile sẽ set request về `submitted` rồi xoá các `approved_listings` liên quan để unpublish listing cũ. Thêm backend migration `202606250002_owner_unpublish_listing.js` cho phép request owner xoá approved listing của request mình; admin vẫn có quyền xoá. Docs API/schema cập nhật theo cơ chế unpublish bằng delete listing. Build iOS simulator thành công. Cần restart PocketBase để apply rule delete mới.
+Ngày 2026-06-27: thêm nút icon mắt cho ô mật khẩu trong `LoginView`. `SecureInputField` nay có thể chuyển giữa `SecureField` và `TextField`, dùng SF Symbol `eye`/`eye.slash`, giữ style input hiện có và thêm accessibility label Việt/Anh qua localization. File đã đụng tới: `NexTrade/Features/Auth/LoginView.swift`, `NexTrade/Shared/AppLocalization.swift`, `TASK_LOG.md`. Trạng thái app: login form hỗ trợ xem/ẩn mật khẩu; build iOS simulator thành công bằng `xcodebuild`. Gap còn lại: cần kiểm tra trực quan trên simulator/device nếu muốn xác nhận spacing với bàn phím thực tế. Task tiếp theo nên làm: cân nhắc tách password field thành shared component nếu có thêm màn đăng ký/đổi mật khẩu.
 
 Gap còn lại: cấu hình hiện trỏ `http://127.0.0.1:8090/api/` để chạy simulator local và mở ATS cho local development. Trước khi phát hành hoặc test máy thật, đổi `NexTradeAPIBaseURL` sang backend HTTPS/LAN phù hợp và siết lại ATS; cần thêm đăng ký tài khoản, refresh/expiry token và test UI trên simulator/device.

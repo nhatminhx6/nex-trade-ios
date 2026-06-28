@@ -95,6 +95,7 @@ private struct SecureInputField: View {
     let label: String
     let placeholder: String
     @Binding var text: String
+    @State private var isPasswordVisible = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: AppSpacing.xsmall) {
@@ -102,18 +103,40 @@ private struct SecureInputField: View {
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(AppColor.primaryText)
 
-            SecureField(placeholder, text: $text)
+            ZStack(alignment: .trailing) {
+                Group {
+                    if isPasswordVisible {
+                        TextField(placeholder, text: $text)
+                    } else {
+                        SecureField(placeholder, text: $text)
+                    }
+                }
                 .font(.body)
                 .foregroundStyle(AppColor.primaryText)
                 .textContentType(.password)
-                .padding(.horizontal, AppSpacing.medium)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled(true)
+                .padding(.leading, AppSpacing.medium)
+                .padding(.trailing, 46)
                 .frame(minHeight: 48)
-                .background(AppColor.backgroundElevated)
-                .clipShape(RoundedRectangle(cornerRadius: AppRadius.medium, style: .continuous))
-                .overlay {
-                    RoundedRectangle(cornerRadius: AppRadius.medium, style: .continuous)
-                        .stroke(AppColor.border, lineWidth: 1)
+
+                Button {
+                    isPasswordVisible.toggle()
+                } label: {
+                    Image(systemName: isPasswordVisible ? "eye.slash" : "eye")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(AppColor.secondaryText)
+                        .frame(width: 44, height: 44)
                 }
+                .buttonStyle(.plain)
+                .accessibilityLabel(container.t(isPasswordVisible ? "login.password.hide" : "login.password.show"))
+            }
+            .background(AppColor.backgroundElevated)
+            .clipShape(RoundedRectangle(cornerRadius: AppRadius.medium, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: AppRadius.medium, style: .continuous)
+                    .stroke(AppColor.border, lineWidth: 1)
+            }
         }
     }
 }

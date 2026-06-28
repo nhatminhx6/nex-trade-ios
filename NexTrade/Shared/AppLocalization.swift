@@ -42,6 +42,8 @@ enum AppText {
         "login.email": [.vietnamese: "Email", .english: "Email"],
         "login.password": [.vietnamese: "Mật khẩu", .english: "Password"],
         "login.password.placeholder": [.vietnamese: "Nhập mật khẩu", .english: "Enter password"],
+        "login.password.show": [.vietnamese: "Hiện mật khẩu", .english: "Show password"],
+        "login.password.hide": [.vietnamese: "Ẩn mật khẩu", .english: "Hide password"],
         "login.submit": [.vietnamese: "Đăng nhập", .english: "Sign in"],
         "login.dismiss": [.vietnamese: "Đóng", .english: "Close"],
         "login.error.required": [.vietnamese: "Vui lòng nhập email và mật khẩu.", .english: "Enter your email and password."],
